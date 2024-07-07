@@ -14,6 +14,66 @@ public class AVLTree {
 
     private Node root;
 
+    /** Remover elementos na árvore */
+
+    public void remove(int element) {
+        root = remove(root, element); // Remove recursivamente a partir da raiz
+    }
+
+    private Node remove(Node node, int element) {
+        if (node == null) {
+            return node;
+        }
+
+        if (element < node.element) {
+            node.left = remove(node.left, element);
+        } else if (element > node.element) {
+            node.right = remove(node.right, element);
+        } else {
+            // Nodo com apenas um filho ou sem filhos
+            if (node.left == null || node.right == null) {
+                Node temp = (node.left != null) ? node.left : node.right;
+
+                // Sem filhos
+                if (temp == null) {
+                    temp = node;
+                    node = null;
+                } else {
+                    node = temp; // Copia o conteúdo do filho não nulo
+                }
+            } else {
+                // Nodo com dois filhos: obter o menor valor da subárvore direita
+                Node temp = minValueNode(node.right);
+
+                // Copiar o valor do menor nodo para este nodo
+                node.element = temp.element;
+
+                // Remover o sucessor
+                node.right = remove(node.right, temp.element);
+            }
+        }
+
+        // Se a árvore tinha apenas um nodo, retorna
+        if (node == null) {
+            return node;
+        }
+
+        // Atualiza a altura do nodo atual
+        node.height = Math.max(height(node.left), height(node.right)) + 1;
+
+        // Balancear o nodo
+        return balance(node);
+    }
+
+    private Node minValueNode(Node node) {
+        Node current = node;
+        // Encontra o menor valor da subárvore esquerda
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
+
     /** Adicionar elementos na árvore */
     public void add(int element) {
         root = add(root, element); // Adiciona recursivamente a partir da raiz
@@ -108,7 +168,8 @@ public class AVLTree {
         if (node == null) {
             return 0; // Se o nodo é nulo, retorna 0
         }
-        // Retorna 1 (o próprio nodo) + tamanho da subárvore esquerda + tamanho da subárvore direita
+        // Retorna 1 (o próprio nodo) + tamanho da subárvore esquerda + tamanho da
+        // subárvore direita
         return 1 + size(node.left) + size(node.right);
     }
 
@@ -120,7 +181,7 @@ public class AVLTree {
     /** Retornar os elementos da árvore em uma lista usando caminhamento central */
     public void inOrder() {
         inOrder(root); // Inicia a travessia a partir da raiz
-        System.out.println(); 
+        System.out.println();
     }
 
     private void inOrder(Node node) {
@@ -135,7 +196,7 @@ public class AVLTree {
     private Node balance(Node node) {
         int balanceFator = getBalanceFator(node);
 
-        // rotação esquerda
+        // Rotação direita
         if (balanceFator > 1) {
             if (getBalanceFator(node.left) < 0) {
                 node.left = rotateLeft(node.left);
@@ -143,7 +204,7 @@ public class AVLTree {
             return rotateRight(node);
         }
 
-        // rotação direita
+        // Rotação esquerda
         if (balanceFator < -1) {
             if (getBalanceFator(node.right) > 0) {
                 node.right = rotateRight(node.right);
