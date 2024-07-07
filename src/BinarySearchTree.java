@@ -2,6 +2,9 @@
  * CLASSE BinarySearchTree
  * Trabalhando com árvore binária de pesquisa
  * */
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 class BinarySearchTree {
 
@@ -290,29 +293,104 @@ class BinarySearchTree {
      * @return valor inteiro correspondente a quantidade de nodos folha
      */
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /** método retona a soma dos valores de todos os nodos externos (folhas) de uma árvore
+    * @param defina a necessidade de parâmetros de acordo com a sua implementaçãor
+    * @return valor inteiro correspondente a soma dos valores de todos os nodos folha
+    */
+    
+     public int sumExternalNodes(Node current) {
+        // Se o nodo atual é nulo, retorna 0 (arvore vazia ou chegou ao final de um ramo)
+        if (current == null) {
+            return 0;
+        }
+
+        // Se o nodo atual é uma folha (não tem filhos), retorna o valor do nodo
+        if (current.left == null && current.right == null) {
+            return current.element;
+        }
+
+        // Caso contrario, soma recursivamente os valores das folhas dos sub-ramos esquerdo e direito
+        return sumExternalNodes(current.left) + sumExternalNodes(current.right);
+
+     }
 
     /**
-     * Método sumExternalNodes(...)
-     * método retorna a soma dos valores de todos os nodos externos (folhas) de uma árvore
-     * @param defina a necessidade de parâmetros de acordo com a sua implementação
-     * @return valor inteiro correspondente a soma dos valores de todos os nodos folha
-     */
+    * método que imprime o caminhamento em largura
+    * @param defina parâmetros caso haja necessidade na sua implementação
+    */
 
+    public void breadthFirstOrder(Node root) {
+
+        // se a árvore está vazia
+        if (root == null) {
+            return;
+        }
+
+        // uma fila para armazenar os nodos
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            // remove o nodo da frente da fila e imprime
+            Node current = queue.poll();
+            System.out.print(current.element + " ");
+
+            // adiciona os filhos do nodo atual a fila
+            if (current.left != null) {
+                queue.add(current.left);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+            }
+        }
+    }
 
     /**
-     * Método breadthFirstOrder(...)
-     * método que imprime o caminhamento em largura
-     * @param defina parâmetros caso haja necessidade na sua implementação
-     */
+    * método método que retorna a soma de valores de uma sequência de nodos (deve incluir o valor do nodo inicial, mas não do nodo final)
+    * @param start valor que corresponde ao nodo de início
+    * @param end valor que corresponde ao nodo de fim
+    * @param defina outros caso haja necessidade na sua implementação
+    * @return valor inteiro correspondente a soma dos nodos do caminho determinado
+    */
+
+    public int sumBetween(int start, int end) {
+        return sumBetween(root, start, end, false);
+    }
+
+    private int sumBetween(Node node, int start, int end, boolean started) {
+
+        // se o nodo atual é nulo, retorna 0
+        if (node == null) {
+            return 0;
+        }
+
+        int sum = 0;
+
+        // verifica se devemos começar a somar
+        if (node.element == start) {
+            started = true;
+            sum += node.element;
+        }
+
+        // se já começamos a somar, adiciona o valor do nodo atual
+        if (started && node.element != end) {
+            sum += node.element;
+        }
+
+        // se atingimos o nodo final, retorna a soma
+        if (node.element == end) {
+            return sum;
+        }
+
+        // continua a busca recursivamente nos sub-ramos esquerdo e direito
+        sum += sumBetween(node.left, start, end, started);
+        sum += sumBetween(node.right, start, end, started);
+
+        return sum;
+    }
 
 
-    /**
-     * Método sumBetween(...)
-     * método método que retorna a soma de valores de uma sequência de nodos (deve incluir o valor do nodo inicial, mas não do nodo final)
-     * @param start valor que corresponde ao nodo de início
-     * @param end valor que corresponde ao nodo de fim
-     * @param defina outros caso haja necessidade na sua implementação
-     * @return valor inteiro correspondente a soma dos nodos do caminho determinado
-     */
 
 }
