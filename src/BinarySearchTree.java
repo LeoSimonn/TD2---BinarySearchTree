@@ -254,11 +254,10 @@ class BinarySearchTree {
         System.out.println("Altura da arvore: " + height(root));
         System.out.println("Quantidade de Nós: " + countNodes(root));
         /* DEPOIS DE IMPLEMENTAR OS SEUS MÉTODOS, DESCOMENTE AS LINHAS ABAIXO PARA APRESENTAR OS DADOS */
-        // System.out.println("Nível do menor nodo: " + minNodeLevel(...));
-        // System.out.println("Diferença entre o valor máximo e a raiz: " + diffMaxRoot(...));
-        // System.out.println("Contagem dos nodos internos (galhos): " + countInternalNodes(...));
-        // System.out.println("Soma dos valores de nodos externos (folhas): " + sumExternalNodes(...));
-
+        System.out.println("Nível do menor nodo: " + minNodeLevel(root, 0));
+        System.out.println("Diferença entre o valor máximo e a raiz: " + diffMaxRoot());
+        System.out.println("Contagem dos nodos internos (galhos): " + countInternalNodes(root));
+        System.out.println("Soma dos valores de nodos externos (folhas): " + sumExternalNodes(root));
     }
 
     public void printTree() {
@@ -277,6 +276,18 @@ class BinarySearchTree {
      * @return valor do menor nodo da árvore
      */
 
+    public int minNodeLevel(Node current, int level) {
+        if (root == null) { // Retorna '-1' caso a árvore não tenha nodos
+            return -1;
+        }
+        if (current == null) { // Condicional para quando o algoritmo atinge um nodo nulo (final)
+            return Integer.MAX_VALUE; // Retorna o maior valor possível de Integer no Java para não atrapalhar na comparação da função Math de mínimos
+        }
+        if (current.left == null && current.right == null) { // Se for um nó folha, retora o nível atual
+            return level;
+        } // Abaixo calcula recursivamente o nível mínimo nos filhos esquerdo e direito
+        return Math.min(minNodeLevel(current.left, level + 1), minNodeLevel(current.right, level + 1));
+    }
 
     /**
      * Método diffMaxRoot(...)
@@ -285,6 +296,18 @@ class BinarySearchTree {
      * @return valor da subtração do valor do nodo de maior valor com o valor do nodo raiz
      */
 
+    public int diffMaxRoot() {
+        if (root == null) { // Retorna '0' caso a árvore esteja vazia
+            return 0;
+        }
+        return maxValue(root) - root.element; // Retorna (e chama) o método maxValue com a raíz como parâmetro, subtraído do valor da raíz
+    }
+    private int maxValue(Node current) {
+        if (current.right == null) { // Caso o nodo da direita seja nulo, retorna o valor do nodo atual
+            return current.element;
+        }
+        return maxValue(current.right); // Retorna recursivamente o próprio método passando como parâmetro o nodo filho da direita do nodo atual
+    }
 
     /**
      * Método countInternalNodes(...)
@@ -293,14 +316,20 @@ class BinarySearchTree {
      * @return valor inteiro correspondente a quantidade de nodos folha
      */
 
+    public int countInternalNodes(Node current) {
+        if (current == null || (current.left == null && current.right == null)) { // Retorna '0' caso o nodo atual seja nulo ou não tenha filhos
+            return 0;
+        }
+        return 1 + countInternalNodes(current.left) + countInternalNodes(current.right); // Retorna 1 + a contagem recursiva dos filhos da esquerda e direita
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** método retona a soma dos valores de todos os nodos externos (folhas) de uma árvore
-    * @param defina a necessidade de parâmetros de acordo com a sua implementaçãor
-    * @return valor inteiro correspondente a soma dos valores de todos os nodos folha
-    */
-    
-     public int sumExternalNodes(Node current) {
+     * @param defina a necessidade de parâmetros de acordo com a sua implementaçãor
+     * @return valor inteiro correspondente a soma dos valores de todos os nodos folha
+     */
+
+    public int sumExternalNodes(Node current) {
         // Se o nodo atual é nulo, retorna 0 (arvore vazia ou chegou ao final de um ramo)
         if (current == null) {
             return 0;
@@ -314,12 +343,12 @@ class BinarySearchTree {
         // Caso contrario, soma recursivamente os valores das folhas dos sub-ramos esquerdo e direito
         return sumExternalNodes(current.left) + sumExternalNodes(current.right);
 
-     }
+    }
 
     /**
-    * método que imprime o caminhamento em largura
-    * @param defina parâmetros caso haja necessidade na sua implementação
-    */
+     * método que imprime o caminhamento em largura
+     * @param defina parâmetros caso haja necessidade na sua implementação
+     */
 
     public void breadthFirstOrder(Node root) {
 
@@ -348,12 +377,12 @@ class BinarySearchTree {
     }
 
     /**
-    * método método que retorna a soma de valores de uma sequência de nodos (deve incluir o valor do nodo inicial, mas não do nodo final)
-    * @param start valor que corresponde ao nodo de início
-    * @param end valor que corresponde ao nodo de fim
-    * @param defina outros caso haja necessidade na sua implementação
-    * @return valor inteiro correspondente a soma dos nodos do caminho determinado
-    */
+     * método método que retorna a soma de valores de uma sequência de nodos (deve incluir o valor do nodo inicial, mas não do nodo final)
+     * @param start valor que corresponde ao nodo de início
+     * @param end valor que corresponde ao nodo de fim
+     * @param defina outros caso haja necessidade na sua implementação
+     * @return valor inteiro correspondente a soma dos nodos do caminho determinado
+     */
 
     public int sumBetween(int start, int end) {
         return sumBetween(root, start, end, false);
