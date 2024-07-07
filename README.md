@@ -2,7 +2,7 @@
 
 ## Integrantes
 1. Leonardo Simon Monteiro
-2. Nome do Integrante 2
+2. Bruno Coliselli Fernandes
 3. Nome do Integrante 3
 
 ## Descrição
