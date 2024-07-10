@@ -3,7 +3,7 @@
 ## Integrantes
 1. Leonardo Simon Monteiro
 2. Bruno Coliselli Fernandes
-3. Nome do Integrante 3
+3. Esthevan Pereira
 
 ## Descrição
 Este projeto tem como objetivo implementar métodos em uma Árvore Binária de Pesquisa (BST) e estudar uma árvore balanceada (AVL ou Red-Black). O projeto é dividido em duas partes principais:
