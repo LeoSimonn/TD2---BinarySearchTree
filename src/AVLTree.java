@@ -1,21 +1,10 @@
+import java.util.Scanner;
 
 public class AVLTree {
-
-    private class Node {
-        int element;
-        Node left, right;
-        int height;
-
-        Node(int element) {
-            this.element = element;
-            this.height = 1; // Inicialmente, a altura de um nodo é 1
-        }
-    }
 
     private Node root;
 
     /** Remover elementos na árvore */
-
     public void remove(int element) {
         root = remove(root, element); // Remove recursivamente a partir da raiz
     }
@@ -58,9 +47,6 @@ public class AVLTree {
             return node;
         }
 
-        // Atualiza a altura do nodo atual
-        node.height = Math.max(height(node.left), height(node.right)) + 1;
-
         // Balancear o nodo
         return balance(node);
     }
@@ -82,7 +68,8 @@ public class AVLTree {
     private Node add(Node node, int element) {
         // Se o nodo atual é nulo, cria um novo nodo com o valor
         if (node == null) {
-            return new Node(element);
+            node = new Node();
+            node.element = element;
         }
 
         // Compara o valor para decidir em qual subárvore inserir
@@ -91,11 +78,8 @@ public class AVLTree {
         } else if (element > node.element) {
             node.right = add(node.right, element);
         } else {
-            return node; // Já existe elemento na arvore
+            return node; // Já existe elemento na árvore
         }
-
-        // Atualiza a altura do nodo atual
-        node.height = 1 + Math.max(height(node.left), height(node.right));
 
         // Balanceia o nodo e retorna o novo nodo balanceado
         return balance(node);
@@ -156,7 +140,7 @@ public class AVLTree {
     }
 
     private int height(Node node) {
-        return (node == null) ? 0 : node.height; // Retorna a altura do nodo
+        return (node == null) ? 0 : 1 + Math.max(height(node.left), height(node.right));
     }
 
     /** Verificar quantos elementos tem na árvore */
@@ -229,10 +213,6 @@ public class AVLTree {
         x.right = y;
         y.left = T2;
 
-        // Atualiza as alturas
-        y.height = Math.max(height(y.left), height(y.right)) + 1;
-        x.height = Math.max(height(x.left), height(x.right)) + 1;
-
         // Retorna o novo nodo raiz
         return x;
     }
@@ -246,12 +226,107 @@ public class AVLTree {
         y.left = x;
         x.right = T2;
 
-        // Atualiza as alturas
-        x.height = Math.max(height(x.left), height(x.right)) + 1;
-        y.height = Math.max(height(y.left), height(y.right)) + 1;
-
         // Retorna o novo nodo raiz
         return y;
     }
 
+    public int heightAjustado() { // Ajuste necessário para diferenciar a altura usada em outros métodos da AVL do que é mostrado no display
+        return height(root) - 1; // A árvore vai ter altura -1 quando vazia, 0 quando tem somente a raíz e assim por diante
+    }
+
+    public void printTree() {
+        if (root != null) {
+            TreeFormatter formatter = new TreeFormatter();
+            System.out.println(formatter.topDown(root));
+        } else {
+            System.out.println("Árvore vazia!");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        AVLTree tree = new AVLTree();
+        int op;
+        int value;
+
+        do {
+            System.out.println("\nÁRVORE AVL");
+            System.out.println("---------------------------------------");
+            System.out.println("1 | Adicionar nodo");
+            System.out.println("2 | Remover nodo");
+            System.out.println("3 | Pesquisar nodo");
+            System.out.println("4 | Exibir a árvore");
+            System.out.println("5 | Mostrar informações");
+            System.out.println("6 | Mostrar caminhamentos");
+            System.out.println("7 | Esvaziar árvore");
+            System.out.println("8 | Rodar testes do enunciado");
+            System.out.println("0 | Sair do programa");
+            System.out.println("---------------------------------------");
+            System.out.println("Digite a opção desejada: ");
+
+            op = scan.nextInt();
+
+            switch (op) {
+                case 1 -> {
+                    System.out.println("Informe um valor inteiro:");
+                    value = scan.nextInt();
+                    tree.add(value);
+                }
+                case 2 -> {
+                    System.out.println("Informe um valor inteiro:");
+                    value = scan.nextInt();
+                    tree.remove(value);
+                }
+                case 3 -> {
+                    System.out.println("Informe um valor inteiro:");
+                    value = scan.nextInt();
+                    if (tree.contains(value))
+                        System.out.println("Valor encontrado!");
+                    else
+                        System.out.println("Valor não encontrado!");
+                }
+                case 4 -> {
+                    tree.printTree();
+                }
+                case 5 -> {
+                    System.out.println("Altura da árvore: " + tree.heightAjustado());
+                    System.out.println("Número de elementos: " + tree.size());
+                }
+                case 6 -> {
+                    System.out.println("Caminhamento central:");
+                    tree.inOrder();
+                }
+                case 7 -> {
+                    tree.clear();
+                    System.out.println("Árvore esvaziada.");
+                }
+                case 8 -> {
+                    // Rodar testes do enunciado
+                    System.out.println("Inserindo elementos de 1 a 9 na árvore...\n");
+                    tree = new AVLTree();
+                    for (int i = 1; i <= 9; i++) {
+                        tree.add(i);
+                    }
+                    System.out.println("Árvore após inserir 1 a 9:");
+                    tree.printTree();
+                    System.out.println("Altura da árvore: " + tree.heightAjustado());
+
+                    System.out.println("\nEsvaziando a árvore...");
+                    tree.clear();
+                    System.out.println("Árvore limpa. Está vazia? " + tree.isEmpty());
+
+                    System.out.println("\nInserindo elementos de 9 a 1 na árvore...\n");
+                    for (int i = 9; i >= 1; i--) {
+                        tree.add(i);
+                    }
+                    System.out.println("Árvore após inserir 9 a 1:");
+                    tree.printTree();
+                    System.out.println("Caminhamento central da árvore após a inserção:");
+                    tree.inOrder();
+                }
+            }
+        } while (op != 0);
+
+        scan.close();
+    }
 }
