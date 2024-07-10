@@ -245,8 +245,8 @@ class BinarySearchTree {
         System.out.print("\n Exibindo em Pré-ordem (pre-order): ");
         preOrder(root);
         /* DEPOIS DE IMPLEMENTAR OS SEUS MÉTODOS, DESCOMENTE AS LINHAS ABAIXO PARA APRESENTAR OS DADOS */
-        // System.out.print("\n Exibindo em Largura (breadth-first): ");
-        // breadthFirstOrder(...);
+        System.out.print("\n Exibindo em Largura (breadth-first): ");
+        breadthFirstOrder(root);
 
     }
 
